@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "timeclock-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "timeclock-app"],
+      "port": 5174
+    },
+    {
+      "name": "timeclock-admin",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "timeclock-admin"],
+      "port": 5175
+    }
+  ]
+}
