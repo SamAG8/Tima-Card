@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* Cursor-inspired: near-black bg, cool grays, white accent */
+  --color-bg:           #0A0A0A;
+  --color-surface:      #0A0A0A;
+  --color-surface-mid:  #141414;
+  --color-surface-high: #1E1E1E;
+  --color-surface-hover:#262626;
+  --color-border:       #2A2A2A;
+  --color-border-mid:   #333333;
+
+  --color-text:         #FFFFFF;
+  --color-text-muted:   #A3A3A3;
+  --color-text-subtle:  #525252;
+
+  --color-primary:      #FFFFFF;
+  --color-primary-dark: #E5E5E5;
+
+  --color-success:      #22C55E;
+  --color-warning:      #EAB308;
+  --color-error:        #EF4444;
+
+  --color-clock-active: #22C55E;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.pt-safe { padding-top:    env(safe-area-inset-top); }
+
+/* Clock ring pulse */
+@keyframes clock-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(34,197,94,0.4); }
+  70%  { box-shadow: 0 0 0 16px rgba(34,197,94,0);  }
+  100% { box-shadow: 0 0 0 0   rgba(34,197,94,0);   }
+}
+.animate-clock-pulse { animation: clock-pulse 2s ease-in-out infinite; }
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #141414 25%, #1E1E1E 50%, #141414 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+
+/* Page enter */
+.page-enter { animation: fade-in 180ms ease; }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Bottom sheet slide-up */
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.sheet-enter { animation: slide-up 280ms cubic-bezier(0.32, 0.72, 0, 1); }

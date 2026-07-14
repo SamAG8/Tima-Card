@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv --version)",
+      "Bash(curl -LsSf https://astral.sh/uv/install.sh)",
+      "Bash(sh)",
+      "Bash(export PATH=\"$HOME/.local/bin:$PATH\")",
+      "Bash(uv sync:*)",
+      "Bash(/Users/hosseinasgari/.local/bin/uv run:*)",
+      "Bash(echo \"Exit: $?\")",
+      "WebFetch(domain:gist.github.com)",
+      "Read(//Users/hosseinasgari/.claude/**)",
+      "Bash(python3 -c ':*)",
+      "Bash(sqlite3 '/Users/hosseinasgari/Library/Application Support/Antigravity/User/workspaceStorage/feaeb48854bacdeec6b7a33c66364302/state.vscdb' 'SELECT key, length\\(value\\) FROM ItemTable ORDER BY length\\(value\\) DESC LIMIT 15;')",
+      "Bash(python3 -c \"import sys,json; p=json.load\\(sys.stdin\\); print\\('deps:',list\\(p.get\\('dependencies',{}\\).keys\\(\\)\\)\\)\")",
+      "Read(//Users/hosseinasgari/Developer/Time Clock/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/hosseinasgari/.claude"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+# ── Secrets / environment ─────────────────────────────
+.env
+*.env
+!.env.example
+
+# ── Node ──────────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# ── Python ────────────────────────────────────────────
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ── OS / editor ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# ── Build / native ────────────────────────────────────
+ios/
+android/
+.gradle/
+
+# ── Personal tooling (not part of Time Clock) ─────────
+claude-memory-compiler/
