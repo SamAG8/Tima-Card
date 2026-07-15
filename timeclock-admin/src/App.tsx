@@ -16,17 +16,19 @@ import SettingsPage from './pages/SettingsPage';
 interface Profile {
   role: string;
   company_id: string | null;
+  is_superadmin: boolean;
 }
 
 export default function App() {
-  const [user,    setUser]    = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user,             setUser]             = useState<User | null>(null);
+  const [profile,          setProfile]          = useState<Profile | null>(null);
+  const [loading,          setLoading]          = useState(true);
+  const [selectedCompany,  setSelectedCompany]  = useState<string | null>(null);
 
   const fetchProfile = async (uid: string) => {
     const { data: userRow } = await supabase
       .from('users')
-      .select('role')
+      .select('role, is_superadmin')
       .eq('id', uid)
       .maybeSingle();
 
@@ -68,6 +70,7 @@ export default function App() {
     setProfile({
       role: userRow?.role ?? 'admin',
       company_id,
+      is_superadmin: userRow?.is_superadmin ?? false,
     });
   };
 
@@ -99,12 +102,14 @@ export default function App() {
 
   if (!user) return <AuthPage />;
 
-  const companyId = profile?.company_id ?? user.user_metadata?.company_id ?? '';
-  const role      = profile?.role ?? user.user_metadata?.role ?? 'admin';
-  const userId    = user.id;
+  const ownCompanyId  = profile?.company_id ?? user.user_metadata?.company_id ?? '';
+  const isSuperadmin  = profile?.is_superadmin ?? false;
+  const companyId     = (isSuperadmin && selectedCompany) ? selectedCompany : ownCompanyId;
+  const role          = profile?.role ?? user.user_metadata?.role ?? 'admin';
+  const userId        = user.id;
 
   return (
-    <AuthContext.Provider value={{ user, companyId, role, userId, signOut }}>
+    <AuthContext.Provider value={{ user, companyId, setCompanyId: setSelectedCompany, isSuperadmin, role, userId, signOut }}>
       <BrowserRouter>
         <div className="flex h-screen overflow-hidden" style={{ background: 'var(--color-bg)' }}>
           <Sidebar />

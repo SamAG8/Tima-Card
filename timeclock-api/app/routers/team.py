@@ -11,12 +11,35 @@ from sqlalchemy.orm import Session
 from app.auth import get_current_user
 from app.database import get_db
 from app.middleware.subscription import require_subscription, require_role
-from app.models.shared import User, Membership, Role, Project
+from app.models.shared import User, Membership, Role, Project, Company, AppSubscription
 from app.models.time_clock import WorkerManager, TimeEntry
 
 router = APIRouter(prefix="/team", tags=["Team"])
 
 ADMIN_ROLES = ["OWNER", "ADMIN"]
+
+
+@router.get("/companies")
+def list_companies(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Superadmin only — list every company with an active/trial Time Clock subscription."""
+    if not getattr(current_user, "is_superadmin", False):
+        raise HTTPException(status_code=403, detail="Superadmin access required")
+
+    rows = (
+        db.query(Company.id, Company.name)
+        .join(AppSubscription, AppSubscription.company_id == Company.id)
+        .filter(
+            AppSubscription.app_key == "TIME_CLOCK",
+            AppSubscription.status.in_(["ACTIVE", "TRIAL"]),
+            Company.deleted_at.is_(None),
+        )
+        .order_by(Company.name)
+        .all()
+    )
+    return [{"id": str(r.id), "name": r.name} for r in rows]
 
 
 class AssignManagerRequest(BaseModel):

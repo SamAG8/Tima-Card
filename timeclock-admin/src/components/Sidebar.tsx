@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../lib/auth';
+import { api } from '../lib/api';
 
 const nav = [
   { to: '/dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
@@ -18,11 +19,17 @@ const nav = [
 ];
 
 export default function Sidebar() {
-  const { signOut } = useAuth();
+  const { signOut, isSuperadmin, companyId, setCompanyId } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('tc-theme') as 'dark' | 'light') ?? 'dark';
   });
+  const [companies, setCompanies] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    if (!isSuperadmin) return;
+    api.listCompanies().then(setCompanies).catch(() => setCompanies([]));
+  }, [isSuperadmin]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -99,6 +106,36 @@ export default function Sidebar() {
           </div>
         )}
       </div>
+
+      {/* Company selector — superadmin only */}
+      {isSuperadmin && !collapsed && (
+        <div style={{ padding: '10px 10px 0', flexShrink: 0 }}>
+          <label style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-subtle)', letterSpacing: 0.4, textTransform: 'uppercase' }}>
+            Company
+          </label>
+          <select
+            value={companyId}
+            onChange={e => setCompanyId(e.target.value)}
+            style={{
+              width: '100%',
+              marginTop: 4,
+              padding: '6px 8px',
+              fontSize: 12,
+              borderRadius: 8,
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-surface-mid)',
+              color: 'var(--color-text)',
+              outline: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            {companies.length === 0 && <option value={companyId}>Loading…</option>}
+            {companies.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: '8px 8px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>

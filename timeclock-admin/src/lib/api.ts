@@ -93,6 +93,9 @@ async function request<T>(method: string, path: string, body?: unknown, params?:
 }
 
 export const api = {
+  listCompanies: () =>
+    request<{ id: string; name: string }[]>('GET', '/api/v1/team/companies'),
+
   getPendingApprovals: (company_id: string) =>
     request<unknown[]>('GET', '/api/v1/approvals/pending', undefined, { company_id }),
 
