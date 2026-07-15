@@ -1,5 +1,7 @@
 import json
 import httpx
+import google.auth
+import google.auth.transport.requests
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
@@ -12,8 +14,29 @@ from sqlalchemy import text as sa_text
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 
+_credentials = None
+
+
+def _get_access_token() -> str:
+    """Mint/refresh an OAuth access token for Vertex AI via Application Default Credentials."""
+    global _credentials
+    if _credentials is None:
+        _credentials, _ = google.auth.default(
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
+    if not _credentials.valid:
+        _credentials.refresh(google.auth.transport.requests.Request())
+    return _credentials.token
+
+
 def gemini_url() -> str:
-    return f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GEMINI_MODEL}:generateContent"
+    location = settings.GOOGLE_CLOUD_LOCATION
+    host = "aiplatform.googleapis.com" if location == "global" else f"{location}-aiplatform.googleapis.com"
+    return (
+        f"https://{host}/v1/"
+        f"projects/{settings.GOOGLE_CLOUD_PROJECT}/locations/{location}"
+        f"/publishers/google/models/{settings.GEMINI_MODEL}:generateContent"
+    )
 
 
 class AnalyzeWorkRequest(BaseModel):
@@ -54,7 +77,7 @@ async def analyze_work(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if not settings.GEMINI_API_KEY:
+    if not settings.GOOGLE_CLOUD_PROJECT:
         raise HTTPException(status_code=503, detail="AI service not configured")
 
     if not body.description.strip():
@@ -101,11 +124,17 @@ Rules:
 - summary must describe the actual work done, not the budget code
 """
 
+    try:
+        access_token = _get_access_token()
+    except Exception:
+        raise HTTPException(status_code=503, detail="AI service not configured")
+
     async with httpx.AsyncClient(timeout=15.0) as client:
         resp = await client.post(
-            f"{gemini_url()}?key={settings.GEMINI_API_KEY}",
+            gemini_url(),
+            headers={"Authorization": f"Bearer {access_token}"},
             json={
-                "contents": [{"parts": [{"text": prompt}]}],
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
                 "generationConfig": {"temperature": 0.1, "maxOutputTokens": 300},
             },
         )

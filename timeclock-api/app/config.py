@@ -15,8 +15,9 @@ class Settings:
     ).split(",")
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "dev")
     DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str   = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-lite")
+    GEMINI_MODEL: str            = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
+    GOOGLE_CLOUD_PROJECT: str    = os.getenv("GOOGLE_CLOUD_PROJECT", "")
+    GOOGLE_CLOUD_LOCATION: str   = os.getenv("GOOGLE_CLOUD_LOCATION", "global")
 
 
 settings = Settings()

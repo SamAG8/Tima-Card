@@ -157,7 +157,7 @@ Aggregation rows per division, per project, per worker.
 ## AI Rules (strict)
 - All AI analysis goes through FastAPI backend ONLY
 - Never call Gemini from frontend
-- Model: `gemini-3.1-flash-lite-preview` (locked in .env)
+- Model: `gemini-3.1-flash-lite` via Vertex AI (project/location locked in .env)
 - When suggesting budget codes: send the full list of codes to AI, AI picks from that list only
 
 ---

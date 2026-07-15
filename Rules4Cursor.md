@@ -452,7 +452,9 @@ timeclock-admin → http://localhost:5175
 
 ## 8. AI Integration (Gemini)
 
-- **Model:** `gemini-3.1-flash-lite-preview` (env: `GEMINI_MODEL`)
+- **Backend:** Vertex AI, auth via Application Default Credentials (gcloud ADC, account `constralabs@gmail.com`)
+- **Model:** `gemini-3.1-flash-lite` (env: `GEMINI_MODEL`) — only available at location `global` on this project, not regional (e.g. `us-central1`)
+- **Project/location:** `GOOGLE_CLOUD_PROJECT=constra-ap`, `GOOGLE_CLOUD_LOCATION=global` (same GCP project as CDefApp)
 - **Used in:** `timeclock-api/app/routers/ai.py`
 - **Endpoint:** `POST /api/v1/ai/analyze`
 - **Input:** work description + company_id + optional project/duration
@@ -601,7 +603,7 @@ npm run dev   # → http://localhost:5175
 ```
 
 **Environment files** (already configured, do not change):
-- `timeclock-api/.env` — DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, GEMINI_API_KEY
+- `timeclock-api/.env` — DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, GEMINI_MODEL
 - `timeclock-app/.env` — VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_API_BASE_URL
 - `timeclock-admin/.env` — same pattern
 
@@ -630,7 +632,9 @@ user = response.user
 2. **`time_clock.company_settings`** may not have a row for every company.
    `GET /api/v1/settings/{company_id}` returns 404 if missing — frontend must handle this gracefully.
 
-3. **Gemini model name** in `.env` is `gemini-3.1-flash-lite-preview` — this is correct, do not change.
+3. **Gemini model name** in `.env` is `gemini-3.1-flash-lite`, served via Vertex AI (not the old
+   Generative Language API key). Requires `GOOGLE_CLOUD_PROJECT`/`GOOGLE_CLOUD_LOCATION` and
+   Application Default Credentials configured — do not change without updating both.
 
 4. **`time_clock.time_entry_tags`** table exists but is legacy — budget_code_id on time_entries
    is now the primary way to tag entries. Tags table is kept for backwards compatibility only.
