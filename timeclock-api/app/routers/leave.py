@@ -14,7 +14,7 @@ from app.models.time_clock import LeaveType, LeaveBalance, LeaveRequest
 
 router = APIRouter(prefix="/leave", tags=["Leave"])
 
-MANAGER_ROLES = ["OWNER", "ADMIN", "MANAGER", "admin", "super_admin", "manager"]
+from app.roles import MANAGER_ROLES
 
 
 class LeaveRequestCreate(BaseModel):

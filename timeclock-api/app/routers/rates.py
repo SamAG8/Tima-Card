@@ -16,7 +16,7 @@ from app.models.time_clock import WorkerRate
 
 router = APIRouter(prefix="/rates", tags=["Worker Rates"])
 
-ADMIN_ROLES = ["OWNER", "ADMIN"]
+from app.roles import ADMIN_ROLES
 
 
 class RateCreate(BaseModel):

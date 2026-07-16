@@ -17,7 +17,7 @@ from app.models.time_clock import CompanySettings
 
 router = APIRouter(prefix="/settings", tags=["Settings"])
 
-ADMIN_ROLES = ["OWNER", "ADMIN"]
+from app.roles import ADMIN_ROLES
 
 
 class SettingsUpdate(BaseModel):

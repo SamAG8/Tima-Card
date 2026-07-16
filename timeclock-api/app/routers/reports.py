@@ -20,7 +20,8 @@ from app.services.excel_export import generate_payroll_excel
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
 # Same mix as approvals/leave (CDefApp uses mixed-case role keys).
-REPORT_ROLES = ["OWNER", "ADMIN", "MANAGER", "admin", "super_admin", "manager"]
+# Report visibility uses the same set of roles as time-entry management.
+from app.roles import MANAGER_ROLES as REPORT_ROLES
 
 
 @router.get("/payroll")

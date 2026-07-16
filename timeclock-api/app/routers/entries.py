@@ -14,7 +14,7 @@ from app.models.time_clock import TimeEntry, TimeEntryTag, MissedEntryNotificati
 
 router = APIRouter(prefix="/entries", tags=["Time Entries"])
 
-MANAGER_ROLES = ["OWNER", "ADMIN", "MANAGER", "admin", "super_admin", "manager"]
+from app.roles import MANAGER_ROLES
 
 
 # ---------------------------------------------------------------------------

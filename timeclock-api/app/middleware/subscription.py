@@ -2,10 +2,6 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.shared import AppSubscription, Membership, Role, User
 
-# Roles that are allowed to manage workers in Time Clock.
-# Includes both CDefApp role keys (mixed case) and Time Clock user roles.
-MANAGER_ROLE_KEYS = {"OWNER", "ADMIN", "MANAGER", "admin", "super_admin", "manager"}
-
 
 def require_subscription(company_id: str, db: Session) -> None:
     """Raise 422 if company_id is empty, 403 if no active TIME_CLOCK subscription."""

@@ -16,7 +16,7 @@ from app.models.time_clock import WorkerManager, TimeEntry
 
 router = APIRouter(prefix="/team", tags=["Team"])
 
-ADMIN_ROLES = ["OWNER", "ADMIN"]
+from app.roles import ADMIN_ROLES
 
 
 @router.get("/companies")

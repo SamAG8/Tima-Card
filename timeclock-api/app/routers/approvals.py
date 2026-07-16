@@ -14,7 +14,7 @@ from app.models.time_clock import TimeEntry, TimeEntryApproval, WorkerManager
 
 router = APIRouter(prefix="/approvals", tags=["Approvals"])
 
-MANAGER_ROLES = ["OWNER", "ADMIN", "MANAGER", "admin", "super_admin", "manager"]
+from app.roles import MANAGER_ROLES
 
 
 class ApprovalRequest(BaseModel):
